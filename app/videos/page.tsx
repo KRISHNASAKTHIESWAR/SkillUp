@@ -1,66 +1,87 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Video, Play } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Unlock, Lock, Star } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Progress } from '@/components/ui/progress'
+
+// Define the Benefit type
+type Benefit = {
+  id: number;
+  title: string;
+  description: string;
+  requiredPoints: number;
+  icon: React.ForwardRefExoticComponent<
+    React.PropsWithoutRef<React.SVGProps<SVGSVGElement>> & React.RefAttributes<SVGSVGElement>
+  >;
+};
 
 // This would typically come from an API
-const mockVideos = [
-  { id: 1, title: 'Introduction to React Hooks', duration: '15:30', thumbnail: '/placeholder.svg?height=120&width=200' },
-  { id: 2, title: 'Advanced CSS Techniques', duration: '22:15', thumbnail: '/placeholder.svg?height=120&width=200' },
-  { id: 3, title: 'JavaScript Promises Explained', duration: '18:45', thumbnail: '/placeholder.svg?height=120&width=200' },
-  { id: 4, title: 'Building RESTful APIs with Node.js', duration: '25:00', thumbnail: '/placeholder.svg?height=120&width=200' },
-  { id: 5, title: 'Responsive Web Design Principles', duration: '20:10', thumbnail: '/placeholder.svg?height=120&width=200' },
-]
+const mockBenefits: Benefit[] = [
+  { id: 1, title: 'Exclusive Webinar Access', description: 'Join live webinars with industry experts', requiredPoints: 100, icon: Unlock },
+  { id: 2, title: 'Certificate of Completion', description: 'Receive a personalized certificate for your achievements', requiredPoints: 500, icon: Lock },
+  { id: 3, title: 'One-on-One Mentoring Session', description: '30-minute session with a senior developer', requiredPoints: 1000, icon: Lock },
+  { id: 4, title: 'Early Access to New Courses', description: 'Be the first to access newly released courses', requiredPoints: 1500, icon: Lock },
+  { id: 5, title: 'Job Board Access', description: 'Exclusive access to our curated job board', requiredPoints: 2000, icon: Lock },
+];
 
-export default function VideosPage() {
-  const [videos, setVideos] = useState([])
-  const [selectedVideo, setSelectedVideo] = useState(null)
+export default function BenefitsPage() {
+  // State initialization
+  const [benefits, setBenefits] = useState<Benefit[]>([]) // Set state type to Benefit[]
+  const [userPoints] = useState<number>(100)  // User points initialized as a number
 
   useEffect(() => {
-    // In a real application, you would fetch videos from an API here
-    setVideos(mockVideos)
+    // Simulating fetching benefits from an API and setting the benefits
+    setBenefits(mockBenefits)
   }, [])
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Course Videos</h1>
+      <h1 className="text-3xl font-bold mb-6">Your Benefits</h1>
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Your Points</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center mb-2">
+            <Star className="h-6 w-6 text-yellow-500 mr-2" />
+            <span className="text-2xl font-bold">{userPoints}</span>
+          </div>
+          <Progress value={(userPoints / 2000) * 100} className="w-full" />
+          <p className="mt-2 text-sm text-gray-600">Keep earning points to unlock more benefits!</p>
+        </CardContent>
+      </Card>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {videos.map((video) => (
-          <Card key={video.id} className="overflow-hidden">
-            <img src={video.thumbnail} alt={video.title} className="w-full h-48 object-cover" />
+        {benefits.map((benefit) => (
+          <Card key={benefit.id}>
             <CardHeader>
-              <CardTitle>{video.title}</CardTitle>
-              <CardDescription>Duration: {video.duration}</CardDescription>
+              <CardTitle className="flex items-center">
+                {benefit.requiredPoints <= userPoints ? (
+                  <benefit.icon className="mr-2 h-5 w-5 text-green-500" />
+                ) : (
+                  <Lock className="mr-2 h-5 w-5 text-gray-500" />
+                )}
+                {benefit.title}
+              </CardTitle>
+              <CardDescription>{benefit.description}</CardDescription>
             </CardHeader>
             <CardContent>
-              <Button onClick={() => setSelectedVideo(video)} className="w-full">
-                <Play className="mr-2 h-4 w-4" /> Watch Now
-              </Button>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-500">
+                  {benefit.requiredPoints} points required
+                </span>
+                {benefit.requiredPoints <= userPoints && (
+                  <span className="text-sm font-medium text-green-500">Unlocked!</span>
+                )}
+              </div>
+              <Progress
+                value={(userPoints / benefit.requiredPoints) * 100}
+                className="w-full mt-2"
+              />
             </CardContent>
           </Card>
         ))}
       </div>
-      {selectedVideo && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <Card className="w-full max-w-3xl">
-            <CardHeader>
-              <CardTitle>{selectedVideo.title}</CardTitle>
-              <Button onClick={() => setSelectedVideo(null)} variant="ghost" className="absolute top-2 right-2">
-                Close
-              </Button>
-            </CardHeader>
-            <CardContent>
-              <div className="aspect-w-16 aspect-h-9">
-                <Video className="w-full h-full" />
-              </div>
-              <p className="mt-4">Video player would be implemented here, potentially using a library like react-player.</p>
-            
-            </CardContent>
-          </Card>
-        </div>
-      )}
     </div>
   )
 }

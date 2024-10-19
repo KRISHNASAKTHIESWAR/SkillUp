@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { BookOpen, User, BookMarked, Award, LogOut, Code, Layers, Video, History, Star } from 'lucide-react'
+import { BookOpen, User, LogOut, Video, History, Star } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -13,7 +13,7 @@ export default function Dashboard() {
   const [progress, setProgress] = useState(30)
   const [selectedPredefinedPath, setSelectedPredefinedPath] = useState('')
   const [selectedCustomPath, setSelectedCustomPath] = useState('')
-  const [points, setPoints] = useState(100)
+  const [points] = useState(100)
 
   const predefinedPaths = [
     { value: 'web-dev', label: 'Web Development' },

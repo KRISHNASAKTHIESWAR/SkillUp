@@ -27,7 +27,7 @@ const mockBenefits: Benefit[] = [
 export default function BenefitsPage() {
   // Type the state as an array of Benefit objects
   const [benefits, setBenefits] = useState<Benefit[]>([])
-  const [userPoints, setUserPoints] = useState(100)  // This would typically come from your user state or API
+  const [userPoints] = useState(100)  // This would typically come from your user state or API
 
   useEffect(() => {
     // In a real application, you would fetch the benefits and user points from an API here
