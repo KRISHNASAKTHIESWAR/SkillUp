@@ -25,7 +25,7 @@ const mockHistory: HistoryItem[] = [
 ];
 
 export default function HistoryPage() {
-  // Type the state with HistoryItem[]
+  // Explicitly type the state as HistoryItem[]
   const [history, setHistory] = useState<HistoryItem[]>([]);
 
   useEffect(() => {
