@@ -9,6 +9,7 @@ import { useToast } from '@/components/ui/use-toast'
 interface LinkedInUpdateProps {
   achievement: {
     type: 'certification' | 'project'
+    
     title: string
     description: string
   }
